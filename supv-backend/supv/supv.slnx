@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/supv.Api/supv.Api.csproj" />
+    <Project Path="src/supv.Common/supv.Common.csproj" />
+    <Project Path="src/supv.Contracts/supv.Contracts.csproj" />
+    <Project Path="src/supv.Data/supv.Data.csproj" />
+    <Project Path="src/supv.Services/supv.Services.csproj" />
+  </Folder>
+</Solution>
