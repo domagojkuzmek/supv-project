@@ -1,5 +1,7 @@
 ## Migrations commands
 
+Run the commands from supv directory
+
 - Create migration
 dotnet ef migrations add InitialCreate --project .\src\supv.Data\supv.Data.csproj --startup-project .\src\supv.API\supv.API.csproj
 

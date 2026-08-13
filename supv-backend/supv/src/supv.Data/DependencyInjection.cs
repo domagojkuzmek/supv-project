@@ -6,11 +6,11 @@ namespace supv.src.supv.Data;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration, string connectionStringValue)
     {
 
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(connectionStringValue));
 
         return services;
     }

@@ -5,7 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddOpenApi();
 
-builder.Services.AddDatabase(builder.Configuration);
+// DbContext
+var connectionString = builder.Configuration.GetConnectionString("ApplicationDatabase")
+        ?? throw new InvalidOperationException(
+        $"Connection string was not found.");
+
+builder.Services.AddDatabase(builder.Configuration, connectionString);
 
 var app = builder.Build();
 
