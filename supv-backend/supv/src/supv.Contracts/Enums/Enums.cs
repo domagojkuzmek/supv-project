@@ -1,8 +1,10 @@
-namespace supv.src.supv.Contracts.Enums;
+namespace Supv.Src.Supv.Contracts;
 
-
-public enum RoleType
+public class Enums
 {
-    admin,
-    upravitelj
+    public enum RoleType
+    {
+        Admin,
+        Upravitelj,
+    }
 }
