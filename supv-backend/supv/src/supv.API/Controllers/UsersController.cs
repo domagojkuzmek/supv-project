@@ -22,7 +22,7 @@ public class UsersController : ControllerBase
         return Ok(usersDto);
     }
 
-    [HttpGet("{userId}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetUser(Guid id, [FromServices] AppDbContext db, [FromServices] IMapper mapper)
     {
         var user = await db.Users
@@ -70,10 +70,9 @@ public class UsersController : ControllerBase
             user);
     }
 
-    /* [HttpPut("{userId}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> UpdateUser()
     {
         return NoContent();
     }
-    */
 }

@@ -22,7 +22,7 @@ public class AppDbContext : DbContext
             entity.Property(u => u.PasswordHash).IsRequired().HasMaxLength(550);
             entity.Property(u => u.RoleType).IsRequired().HasConversion<string>().HasMaxLength(50);
             entity.Property(u => u.IsActive).IsRequired().HasDefaultValue(true);
-            entity.Property(u => u.CreatedAt).IsRequired().HasDefaultValueSql("SYSUTCDATETIME()");
+            entity.Property(u => u.CreatedAt).IsRequired().HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(u => u.UpdatedAt).IsRequired(false);
             entity.Property(u => u.LastLoginAt).IsRequired(false);
         });

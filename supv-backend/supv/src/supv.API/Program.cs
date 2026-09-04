@@ -1,17 +1,27 @@
 using System.Text.Json.Serialization;
+using Asp.Versioning;
 using Supv.Src.Supv.Data;
 using Supv.Src.Supv.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
-builder.Services.AddApiVersioning();
 
+builder.Services.AddApiVersioning(options =>
+        {
+            options.ReportApiVersions = true;
+            options.ApiVersionReader = new UrlSegmentApiVersionReader();
+        });
+
+// Enum serialization
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(
         new JsonStringEnumConverter());
 });
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // DbContext
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDatabase")
@@ -29,6 +39,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHsts();
