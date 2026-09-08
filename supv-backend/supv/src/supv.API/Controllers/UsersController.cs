@@ -18,6 +18,7 @@ public class UsersController : ControllerBase
         var users = await db.Users
         .AsNoTracking()
         .ToListAsync();
+
         var usersDto = mapper.Map<IEnumerable<UserDTO>>(users);
         return Ok(usersDto);
     }
