@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Supv.Src.Supv.Contracts;
 
 public class AppDbContext : DbContext
@@ -11,6 +12,10 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var roleTypeConverter = new ValueConverter<Enums.RoleType, string>(
+        v => v.ToString(),
+        v => Enum.Parse<Enums.RoleType>(v));
+
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>(entity =>
@@ -20,7 +25,7 @@ public class AppDbContext : DbContext
             entity.Property(u => u.LastName).IsRequired().HasMaxLength(100);
             entity.Property(u => u.Email).IsRequired().HasMaxLength(250);
             entity.Property(u => u.PasswordHash).IsRequired().HasMaxLength(550);
-            entity.Property(u => u.RoleType).IsRequired().HasConversion<string>().HasMaxLength(50);
+            entity.Property(u => u.RoleType).IsRequired().HasConversion(roleTypeConverter).HasMaxLength(50);
             entity.Property(u => u.IsActive).IsRequired().HasDefaultValue(true);
             entity.Property(u => u.CreatedAt).IsRequired().HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(u => u.UpdatedAt).IsRequired(false);

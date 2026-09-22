@@ -27,8 +27,10 @@ namespace Supv.Src.Supv.Contracts
             .Matches(@"[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character.");
 
             RuleFor(x => x.RoleType)
-            .NotEmpty().WithMessage("Role type is required")
-            .IsInEnum();
+            .NotNull()
+            .WithMessage("Role type is required")
+            .IsInEnum()
+            .WithMessage("Invalid role type");
         }
     }
 }
