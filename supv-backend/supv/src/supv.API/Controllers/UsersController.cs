@@ -72,8 +72,33 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateUser()
+    public async Task<IActionResult> UpdateUser(
+        Guid id,
+        [FromServices] AppDbContext db,
+        [FromServices] IValidator<UpdateUserDto> validator,
+        [FromBody] UpdateUserDto updateUserDto,
+        CancellationToken cancellationToken)
     {
-        return NoContent();
+        var result = await validator.ValidateAsync(updateUserDto, cancellationToken);
+
+        if (!result.IsValid)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        var user = await db.Users
+                    .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        user.FirstName = updateUserDto.FirstName;
+        user.LastName = updateUserDto.LastName;
+
+        await db.SaveChangesAsync(cancellationToken);
+
+        return Ok();
     }
 }
