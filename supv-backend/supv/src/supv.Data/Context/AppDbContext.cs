@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<User> Vehicle { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,6 +21,7 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            entity.ToTable("Users");
             entity.HasKey(u => u.Id);
             entity.Property(u => u.FirstName).IsRequired().HasMaxLength(100);
             entity.Property(u => u.LastName).IsRequired().HasMaxLength(100);
@@ -30,6 +32,24 @@ public class AppDbContext : DbContext
             entity.Property(u => u.CreatedAt).IsRequired().HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(u => u.UpdatedAt).IsRequired(false);
             entity.Property(u => u.LastLoginAt).IsRequired(false);
+        });
+
+        modelBuilder.Entity<Vehicle>(entity =>
+        {
+            entity.ToTable("Vehicles");
+            entity.HasKey(u => u.Id);
+            entity.Property(u => u.RegistrationNumber).IsRequired().HasMaxLength(10);
+            entity.Property(u => u.VehicleCategory).IsRequired().HasMaxLength(100);
+            entity.Property(u => u.Brand).IsRequired().HasMaxLength(100);
+            entity.Property(u => u.Model).IsRequired().HasMaxLength(100);
+            entity.Property(u => u.PurchaseDate).IsRequired();
+            entity.Property(u => u.PurchaseType).IsRequired().HasMaxLength(100);
+            entity.Property(u => u.Status).IsRequired().HasMaxLength(100);
+            entity.Property(u => u.CreatedAt).IsRequired().HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(u => u.CreatedBy).IsRequired();
+            entity.HasOne<User>().WithMany().HasForeignKey(v => v.CreatedBy).OnDelete(DeleteBehavior.Restrict);
+            entity.Property(u => u.UpdatedAt).IsRequired(false);
+            entity.HasOne<User>().WithMany().HasForeignKey(v => v.UpdatedBy).OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

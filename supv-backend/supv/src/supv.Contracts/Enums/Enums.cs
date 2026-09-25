@@ -7,4 +7,27 @@ public class Enums
         Admin,
         Upravitelj,
     }
+
+    public enum VehicleCategory
+    {
+        OsobniAutomobil,
+        Motocikl,
+        GospodarskoVozilo,
+    }
+
+    public enum TransactionType
+    {
+        Gotovina,
+        Kredit,
+        OperativniLeasing,
+        FinancijskiLeasing,
+    }
+
+    public enum StatusType
+    {
+        DodijeljenoZaposleniku,
+        IzvanUporabe,
+        Servis,
+        Prodano,
+    }
 }
