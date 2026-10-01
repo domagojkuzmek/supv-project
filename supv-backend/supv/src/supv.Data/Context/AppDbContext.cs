@@ -9,7 +9,7 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
-    public DbSet<User> Vehicle { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,19 +20,19 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>(entity =>
-        {
-            entity.ToTable("Users");
-            entity.HasKey(u => u.Id);
-            entity.Property(u => u.FirstName).IsRequired().HasMaxLength(100);
-            entity.Property(u => u.LastName).IsRequired().HasMaxLength(100);
-            entity.Property(u => u.Email).IsRequired().HasMaxLength(250);
-            entity.Property(u => u.PasswordHash).IsRequired().HasMaxLength(550);
-            entity.Property(u => u.RoleType).IsRequired().HasConversion(roleTypeConverter).HasMaxLength(50);
-            entity.Property(u => u.IsActive).IsRequired().HasDefaultValue(true);
-            entity.Property(u => u.CreatedAt).IsRequired().HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
-            entity.Property(u => u.UpdatedAt).IsRequired(false);
-            entity.Property(u => u.LastLoginAt).IsRequired(false);
-        });
+         {
+             entity.ToTable("Users");
+             entity.HasKey(u => u.Id);
+             entity.Property(u => u.FirstName).IsRequired().HasMaxLength(100);
+             entity.Property(u => u.LastName).IsRequired().HasMaxLength(100);
+             entity.Property(u => u.Email).IsRequired().HasMaxLength(250);
+             entity.Property(u => u.PasswordHash).IsRequired().HasMaxLength(550);
+             entity.Property(u => u.RoleType).IsRequired().HasConversion(roleTypeConverter).HasMaxLength(50);
+             entity.Property(u => u.IsActive).IsRequired().HasDefaultValue(true);
+             entity.Property(u => u.CreatedAt).IsRequired().HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
+             entity.Property(u => u.UpdatedAt).IsRequired(false);
+             entity.Property(u => u.LastLoginAt).IsRequired(false);
+         });
 
         modelBuilder.Entity<Vehicle>(entity =>
         {

@@ -9,7 +9,7 @@ public class VehicleDTO
 
     public string Model { get; set; } = string.Empty;
 
-    public DateOnly PurchaseDate { get; set; }
+    public DateTime PurchaseDate { get; set; }
 
     public required string PurchaseType { get; set; }
 
