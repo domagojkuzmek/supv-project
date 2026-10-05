@@ -41,6 +41,39 @@ public class VehiclesController : ControllerBase
         return Ok(vehicleDto);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> CreateVehicle(
+        [FromBody] CreateVehicleDto createVehicleDto,
+        [FromServices] IValidator<CreateVehicleDto> validator,
+        [FromServices] AppDbContext db)
+    {
+        var result = await validator.ValidateAsync(createVehicleDto);
+
+        if (!result.IsValid)
+        {
+            return BadRequest(result.ToDictionary());
+        }
+
+        var vehicle = new Vehicle
+        {
+            RegistrationNumber = createVehicleDto.RegistrationNumber,
+            VehicleCategory = createVehicleDto.VehicleCategory,
+            Brand = createVehicleDto.Brand,
+            Model = createVehicleDto.Model,
+            PurchaseDate = createVehicleDto.PurchaseDate,
+            PurchaseType = createVehicleDto.PurchaseType,
+            Status = createVehicleDto.Status,
+        };
+
+        db.Vehicles.Add(vehicle);
+        await db.SaveChangesAsync();
+
+        return CreatedAtAction(
+            nameof(CreateVehicle),
+            new { id = vehicle.Id },
+            vehicle);
+    }
+
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateVehicle(
         Guid id,
@@ -103,4 +136,5 @@ public class VehiclesController : ControllerBase
 
         return Ok();
     }
+
 }
