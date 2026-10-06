@@ -63,6 +63,7 @@ public class VehiclesController : ControllerBase
             PurchaseDate = createVehicleDto.PurchaseDate,
             PurchaseType = createVehicleDto.PurchaseType,
             Status = createVehicleDto.Status,
+            // CreatedBy = get the logged in user,
         };
 
         db.Vehicles.Add(vehicle);
@@ -75,6 +76,43 @@ public class VehiclesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    public async Task<IActionResult> ReplaceVehicle(
+        Guid id,
+        [FromBody] ReplaceVehicleDto replaceVehicleDto,
+        [FromServices] IValidator<ReplaceVehicleDto> validator,
+        [FromServices] AppDbContext db,
+        CancellationToken cancellationToken)
+    {
+        var result = await validator.ValidateAsync(replaceVehicleDto);
+
+        if (!result.IsValid)
+        {
+            return BadRequest(result.ToDictionary());
+        }
+
+        var vehicle = await db.Vehicles
+                    .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+
+        if (vehicle is null)
+        {
+            return NotFound();
+        }
+
+        vehicle.RegistrationNumber = replaceVehicleDto.RegistrationNumber;
+        vehicle.VehicleCategory = replaceVehicleDto.VehicleCategory;
+        vehicle.Brand = replaceVehicleDto.Brand;
+        vehicle.Model = replaceVehicleDto.Model;
+        vehicle.PurchaseDate = replaceVehicleDto.PurchaseDate;
+        vehicle.PurchaseType = replaceVehicleDto.PurchaseType;
+        vehicle.Status = replaceVehicleDto.Status;
+        // CreatedBy = get the logged in user,
+
+        await db.SaveChangesAsync();
+
+        return Ok(vehicle);
+    }
+
+    [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateVehicle(
         Guid id,
         [FromServices] AppDbContext db,
@@ -136,5 +174,4 @@ public class VehiclesController : ControllerBase
 
         return Ok();
     }
-
 }
