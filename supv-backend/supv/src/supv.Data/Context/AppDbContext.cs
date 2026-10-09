@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Driver> Drivers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,6 +46,26 @@ public class AppDbContext : DbContext
             entity.Property(u => u.PurchaseDate).IsRequired();
             entity.Property(u => u.PurchaseType).IsRequired().HasMaxLength(100);
             entity.Property(u => u.Status).IsRequired().HasMaxLength(100);
+            entity.Property(u => u.CreatedAt).IsRequired().HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(u => u.CreatedBy).IsRequired();
+            entity.HasOne<User>().WithMany().HasForeignKey(v => v.CreatedBy).OnDelete(DeleteBehavior.Restrict);
+            entity.Property(u => u.UpdatedAt).IsRequired(false);
+            entity.HasOne<User>().WithMany().HasForeignKey(v => v.UpdatedBy).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Driver>(entity =>
+        {
+            entity.ToTable("Drivers");
+            entity.HasKey(u => u.Id);
+            entity.Property(u => u.FirstName).IsRequired().HasMaxLength(100);
+            entity.Property(u => u.LastName).IsRequired().HasMaxLength(100);
+            entity.Property(u => u.DateOfBirth).IsRequired();
+            entity.Property(u => u.Gender).IsRequired();
+            entity.Property(u => u.Citizenship).IsRequired().HasMaxLength(3);
+            entity.Property(u => u.Email).IsRequired().HasMaxLength(250);
+            entity.Property(u => u.ContactPhone).IsRequired().HasMaxLength(20);
+            entity.Property(u => u.DrivingLicense).IsRequired();
+            // Driving license foreign key code
             entity.Property(u => u.CreatedAt).IsRequired().HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(u => u.CreatedBy).IsRequired();
             entity.HasOne<User>().WithMany().HasForeignKey(v => v.CreatedBy).OnDelete(DeleteBehavior.Restrict);

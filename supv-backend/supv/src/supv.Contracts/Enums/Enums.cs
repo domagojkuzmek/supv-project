@@ -29,5 +29,6 @@ public class Enums
         IzvanUporabe,
         Servis,
         Prodano,
+        Arhivirano,
     }
 }
