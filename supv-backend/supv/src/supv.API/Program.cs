@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using Supv.Src.Supv.Api;
 using Supv.Src.Supv.Data;
 using Supv.Src.Supv.Services;
 
@@ -22,6 +23,14 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Logger
+builder.Services.AddScoped<LogActionFilter>();
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.AddService<LogActionFilter>();
+});
 
 // DbContext
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDatabase")
