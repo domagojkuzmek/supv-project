@@ -15,12 +15,42 @@ public class VehiclesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetVehicles(
         [FromServices] AppDbContext db,
-        [FromServices] IMapper mapper)
+        [FromServices] IMapper mapper,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken cancellationToken = default)
     {
-        var vehicles = await db.Vehicles.AsNoTracking().ToListAsync();
+        if (page < 1)
+        {
+            return BadRequest("page must be >= 1.");
+        }
+
+        if (pageSize is < 1 or > 100)
+        {
+            return BadRequest("pageSize must be between 1 and 100.");
+        }
+
+        var query = db.Vehicles.AsNoTracking().OrderByDescending(u => u.CreatedAt);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var vehicles = await query
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync(cancellationToken);
 
         var vehiclesDto = mapper.Map<IEnumerable<VehicleDTO>>(vehicles);
-        return Ok(vehiclesDto);
+        return Ok(new
+        {
+            Data = vehiclesDto,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            TotalPages = (int)Math.Ceiling(
+            totalCount / (double)pageSize),
+            HasNextPage = page * (long)pageSize < totalCount,
+            HasPreviousPage = page > 1,
+        });
     }
 
     [HttpGet("{id}")]
