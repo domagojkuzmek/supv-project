@@ -204,4 +204,24 @@ public class VehiclesController : ControllerBase
 
         return Ok();
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteVehicle(
+        Guid id,
+        AppDbContext db,
+        CancellationToken cancellationToken)
+    {
+        var vehicle = await db.Vehicles.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+
+        if (vehicle == null || vehicle.IsDeleted)
+        {
+            return NoContent();
+        }
+
+        // Soft-delete the vehicle: sets IsDeleted=true, DeletedAt=UtcNow
+        vehicle.IsDeleted = true;
+        vehicle.DeletedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync(cancellationToken);
+        return NoContent();
+    }
 }
