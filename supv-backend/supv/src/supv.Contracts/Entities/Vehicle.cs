@@ -16,6 +16,10 @@ public class Vehicle
 
     public Enums.StatusType Status { get; set; }
 
+    public bool IsDeleted { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public Guid CreatedBy { get; set; }
